@@ -11,8 +11,14 @@ const Home = () => {
 
   const [todos, setTodos] = useState([]);
 
+  // MARK: Add Todo
   const handleAddTodo = (todo) => {
     setTodos((prevTodos) => [...prevTodos, todo]);
+  };
+
+  // MARK: Delete Todo
+  const handleDeleteTodo = (id) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
   return (
@@ -48,7 +54,9 @@ const Home = () => {
       </View>
 
       {/* Display Todos Using FlatList */}
-      {todos.length > 0 && <Todos todos={todos} />}
+      {todos.length > 0 && (
+        <Todos todos={todos} onDeleteTodo={handleDeleteTodo} />
+      )}
     </View>
   );
 };
