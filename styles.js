@@ -91,4 +91,43 @@ export const styles = StyleSheet.create({
   doneTodo: {
     textDecorationLine: "line-through",
   },
+
+  // MARK: TodoDetails Styles
+  todoDetailsTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  todoDetailsDescription: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 20,
+  },
+  todoDetailsStatus: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  todoDetailsStatusText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  backButton: {
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  backButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  saveButton: {
+    backgroundColor: "#28A745",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+  },
 });

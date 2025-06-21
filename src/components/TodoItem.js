@@ -1,10 +1,17 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { styles } from "../../styles";
+import { useNavigation } from "@react-navigation/native";
+import { PATHS } from "../routes/Router";
 
 const TodoItem = ({ todo, onDelete, onToggleComplete }) => {
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.todoItem}>
+    <TouchableOpacity
+      style={styles.todoItem}
+      onPress={() => navigation.navigate(PATHS.DETAILS, { todo })}
+    >
       <View>
         <Text
           style={[
