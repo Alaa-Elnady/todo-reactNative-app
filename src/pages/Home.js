@@ -1,19 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styles } from "../../styles";
 import Todos from "../components/Todos";
 import { PATHS } from "../routes/Router";
 import TodoForm from "../components/TodoForm";
 import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const STORAGE_KEY = "@todos";
 
 const Home = () => {
   const { navigate } = useNavigation();
-
   const [todos, setTodos] = useState([]);
+
+  // Load todos from storage
+  useEffect(() => {
+    const loadTodos = async () => {
+      try {
+        const storedTodos = await AsyncStorage.getItem(STORAGE_KEY);
+        if (storedTodos !== null) {
+          setTodos(JSON.parse(storedTodos));
+        }
+      } catch (error) {
+        console.error("Failed to load todos", error);
+      }
+    };
+
+    loadTodos();
+  }, []);
+
+  // Save todos to storage whenever they change
+  useEffect(() => {
+    const saveTodos = async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+      } catch (error) {
+        console.error("Failed to save todos", error);
+      }
+    };
+
+    saveTodos();
+  }, [todos]);
 
   // MARK: Add Todo
   const handleAddTodo = (todo) => {
-    setTodos((prevTodos) => [...prevTodos, todo]);
+    const newTodo = { ...todo, id: Date.now() };
+    setTodos((prevTodos) => [...prevTodos, newTodo]);
   };
 
   // MARK: Delete Todo
