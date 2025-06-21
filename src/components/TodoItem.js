@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { styles } from "../../styles";
 import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 const TodoItem = ({ todo }) => {
@@ -11,8 +12,8 @@ const TodoItem = ({ todo }) => {
         <Text>{todo.description}</Text>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-        <Feather name="trash" size={20} color="red" />
-        <AntDesign name="checkcircleo" size={20} color="green" />
+        <FontAwesome name="trash" size={20} color="red" />
+        <FontAwesome name="check-circle" size={20} color="green" />
       </View>
     </TouchableOpacity>
   );
