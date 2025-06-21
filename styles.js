@@ -71,16 +71,16 @@ export const styles = StyleSheet.create({
   todosContainer: {
     width: "90%",
     marginTop: 20,
-    flexDirection: "column",
-    justifyContent: "space-between",
   },
   todoItem: {
     padding: 10,
     marginVertical: 8,
     borderRadius: 15,
-    borderLeftColor: "#000",
-    borderLeftWidth: 5,
-    backgroundColor: "#ddd",
+    // borderLeftColor: "#000",
+    // borderLeftWidth: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#eee",
   },
   todoTitle: {
     fontSize: 16,
