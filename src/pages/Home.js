@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import { styles } from "../../styles";
-import Todos from "../components/Todos";
-import { PATHS } from "../routes/Router";
-import TodoForm from "../components/TodoForm";
-import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import Todos from "../components/Todos";
+import TodoForm from "../components/TodoForm";
+import { PATHS } from "../routes/Router";
+import { styles } from "../../styles";
 
 const STORAGE_KEY = "@todos";
 
 const Home = () => {
   const { navigate } = useNavigation();
   const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState("All"); // Default to All
 
   // Load todos from storage
   useEffect(() => {
@@ -44,13 +45,32 @@ const Home = () => {
 
   // MARK: Add Todo
   const handleAddTodo = (todo) => {
-    const newTodo = { ...todo, id: Date.now() };
+    const newTodo = { ...todo, id: Date.now().toString(), completed: false };
     setTodos((prevTodos) => [...prevTodos, newTodo]);
   };
 
   // MARK: Delete Todo
   const handleDeleteTodo = (id) => {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  };
+
+  // MARK: Toggle Complete
+  const handleToggleComplete = (id) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  // Filter todos based on active filter
+  const filteredTodos = () => {
+    if (filter === "Completed") {
+      return todos.filter((todo) => todo.completed);
+    } else if (filter === "In Progress") {
+      return todos.filter((todo) => !todo.completed);
+    }
+    return todos; // "All" filter
   };
 
   return (
@@ -68,26 +88,66 @@ const Home = () => {
 
       {/* Filtering Buttons */}
       <View style={styles.filterContainer}>
-        <TouchableOpacity style={styles.activeFilterBtn} activeOpacity={0.7}>
-          <Text style={styles.activeFilterText}>All</Text>
+        <TouchableOpacity
+          style={filter === "All" ? styles.activeFilterBtn : styles.filterBtn}
+          activeOpacity={0.7}
+          onPress={() => setFilter("All")}
+        >
+          <Text
+            style={
+              filter === "All" ? styles.activeFilterText : styles.filterText
+            }
+          >
+            All
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.filterBtn}
+          style={
+            filter === "Completed" ? styles.activeFilterBtn : styles.filterBtn
+          }
           activeOpacity={0.7}
-          onPress={() => navigate(PATHS.DETAILS, { name: "Ahmed", age: 90 })}
+          onPress={() => setFilter("Completed")}
         >
-          <Text style={styles.filterText}>Completed</Text>
+          <Text
+            style={
+              filter === "Completed"
+                ? styles.activeFilterText
+                : styles.filterText
+            }
+          >
+            Completed
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.filterBtn} activeOpacity={0.7}>
-          <Text style={styles.filterText}>In Progress</Text>
+        <TouchableOpacity
+          style={
+            filter === "In Progress" ? styles.activeFilterBtn : styles.filterBtn
+          }
+          activeOpacity={0.7}
+          onPress={() => setFilter("In Progress")}
+        >
+          <Text
+            style={
+              filter === "In Progress"
+                ? styles.activeFilterText
+                : styles.filterText
+            }
+          >
+            In Progress
+          </Text>
         </TouchableOpacity>
       </View>
 
       {/* Display Todos Using FlatList */}
-      {todos.length > 0 && (
-        <Todos todos={todos} onDeleteTodo={handleDeleteTodo} />
+      {filteredTodos().length > 0 ? (
+        <Todos
+          todos={filteredTodos()}
+          onDeleteTodo={handleDeleteTodo}
+          onToggleComplete={handleToggleComplete}
+        />
+      ) : (
+        <Text style={styles.noTodosText}>No tasks available</Text>
       )}
     </View>
   );
