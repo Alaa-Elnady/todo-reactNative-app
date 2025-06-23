@@ -1,10 +1,15 @@
 import { Text, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { styles } from "../../styles";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../Redux/slices/todos.slice";
 
-const TodoForm = ({ onSubmit }) => {
+const TodoForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  // To update store
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
     if (!title) return;
@@ -14,7 +19,10 @@ const TodoForm = ({ onSubmit }) => {
       description,
       completed: false,
     };
-    onSubmit(todo);
+
+    // Add todo using redux
+    dispatch(addTodo(todo));
+
     setTitle("");
     setDescription("");
   };
@@ -28,6 +36,7 @@ const TodoForm = ({ onSubmit }) => {
         placeholder="Enter title"
         onChangeText={(val) => setTitle(val)}
       />
+
       <TextInput
         value={description}
         style={styles.input}
