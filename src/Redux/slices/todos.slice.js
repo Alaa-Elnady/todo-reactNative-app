@@ -13,6 +13,7 @@ const STORAGE_KEY = "@todos";
 export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
   try {
     const storedTodos = await AsyncStorage.getItem(STORAGE_KEY);
+    console.log("The data fetched");
     return storedTodos ? JSON.parse(storedTodos) : [];
   } catch (error) {
     console.log("Faild to load todos from storage: ", error);
@@ -36,7 +37,6 @@ const todosSlice = createSlice({
     loading: false,
     filter: FILTRATION_TYPES.ALL,
   },
-
   reducers: {
     addTodo: (state, action) => {
       const newTodo = action.payload;
@@ -57,9 +57,22 @@ const todosSlice = createSlice({
       }
     },
     updateFilter: (state, action) => {
-      const filter = action.payload;
-      state.filter = filter;
+      state.filter = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTodos.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        state.todos = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchTodos.rejected, (state) => {
+        state.error = "Failed to load todos";
+        state.loading = false;
+      });
   },
 });
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import Todos from "../components/Todos";
 import TodoForm from "../components/TodoForm";
@@ -7,8 +7,6 @@ import { useDispatch } from "react-redux";
 import { fetchTodos } from "../Redux/slices/todos.slice";
 import { styles } from "../../styles";
 
-const STORAGE_KEY = "@todos";
-
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -16,20 +14,6 @@ const Home = () => {
   useEffect(() => {
     dispatch(fetchTodos());
   }, []);
-
-  // MARK: Delete Todo
-  const handleDeleteTodo = (id) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-  };
-
-  // MARK: Toggle Complete
-  const handleToggleComplete = (id) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -44,16 +28,7 @@ const Home = () => {
       {/* FilterTabs */}
       <FilterTabs />
 
-      {/* Display Todos Using FlatList */}
-      {/* {filteredTodos().length > 0 ? (
-        <Todos
-          todos={filteredTodos()}
-          onDeleteTodo={handleDeleteTodo}
-          onToggleComplete={handleToggleComplete}
-        />
-      ) : (
-        <Text style={styles.noTodosText}>No tasks available</Text>
-      )} */}
+      {/* Display Todos */}
       <Todos />
     </View>
   );
